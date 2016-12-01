@@ -1,0 +1,6 @@
+GET   /transaction/start          controllers.Transaction.start()
+GET   /transaction/commit/:id     controllers.Transaction.commit()
+GET   /transaction/rollback/:id   controllers.Transaction.rollback()
+
+POST  /data/store                 controllers.DataObject.store()
+POST  /data/retrieve              controllers.DataObject.retrieve()
