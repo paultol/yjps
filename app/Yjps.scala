@@ -1,4 +1,4 @@
-package yjps
+package app
 
 import scala.concurrent.{ ExecutionContext, Future }
 

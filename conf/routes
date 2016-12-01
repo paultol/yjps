@@ -1,6 +1,7 @@
 GET   /transaction/start          controllers.Transaction.start()
-GET   /transaction/commit/:id     controllers.Transaction.commit()
-GET   /transaction/rollback/:id   controllers.Transaction.rollback()
+GET   /transaction/commit/:id     controllers.Transaction.commit(id: Long)
+GET   /transaction/rollback/:id   controllers.Transaction.rollback(id: Long)
 
 POST  /data/store                 controllers.DataObject.store()
 POST  /data/retrieve              controllers.DataObject.retrieve()
+POST  /data/delete                controllers.DataObject.delete()
