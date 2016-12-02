@@ -1,10 +1,8 @@
-package models
+package dataAccess
 
 /**
   * Created by iv on 12/1/16.
   */
-trait Response {
+trait Retrievable {
 
 }
-
-
