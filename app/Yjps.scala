@@ -1,13 +1,9 @@
-package app
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
+import reactivemongo.api.{Collection, DefaultDB, MongoConnection, MongoDriver}
+import reactivemongo.bson.{BSONDocumentReader, BSONDocumentWriter, Macros, document}
 
-import reactivemongo.api.{ DefaultDB, MongoConnection, MongoDriver }
-import reactivemongo.bson.{
-  BSONDocumentWriter, BSONDocumentReader, Macros, document
-}
-
-object Yjps {
+object GetStarted {
   // My settings (see available connection options)
   val mongoUri = "mongodb://localhost:27017/mydb?authMode=scram-sha1"
 
@@ -22,10 +18,10 @@ object Yjps {
   val futureConnection = Future.fromTry(connection)
   def db1: Future[DefaultDB] = futureConnection.flatMap(_.database("firstdb"))
   def db2: Future[DefaultDB] = futureConnection.flatMap(_.database("anotherdb"))
-  def personCollection = db1.map(_.collection("person"))
+  def personCollection: Future[Collection] = db1.map(_.collection("person"))
 
   // Write Documents: insert or update
-  
+
   implicit def personWriter: BSONDocumentWriter[Person] = Macros.writer[Person]
   // or provide a custom one
 
