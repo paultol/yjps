@@ -37,7 +37,7 @@ object Data extends Controller {
       }
     }
 
-  def store: Action[JsValue] = Action(parse.json) { request =>
+  def store: Action[JsValue] = Action.async(parse.json) { request =>
     request.body
       .asOpt
       .map(dataAccess.storeObject)
@@ -46,8 +46,7 @@ object Data extends Controller {
           .map(yjpsResponse =>
             Ok(yjpsResponse)
           )
-      }
-      .getOrElse(
+      }.getOrElse(
         Future[Result](BadRequest)
       )
   }
