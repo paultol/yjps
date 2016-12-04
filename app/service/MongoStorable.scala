@@ -11,6 +11,8 @@ import yjps.models.StoreRequest
 /**
   * Created by iv on 12/4/16.
   */
+case class MongoStorable(data_id: String, data: JsObject, keyslots: Seq[Keyslot])
+
 object MongoStorable {
 
   case class Keyslot(id: String, keyslot: String)
@@ -32,4 +34,3 @@ object MongoStorable {
   }
 }
 
-case class MongoStorable(data_id: String, data: JsObject, keyslots: Seq[Keyslot])

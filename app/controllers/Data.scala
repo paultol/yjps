@@ -7,7 +7,7 @@ import play.api.libs.functional.syntax._
 import play.api.mvc.{Action, Controller, Result}
 import service.YjpsMongoData
 import storage.MongoStorage
-import yjps.models.{StoreRequest, StoreResponse, YjpsRequest}
+import yjps.models._
 
 import scala.concurrent.Future
 
@@ -23,21 +23,28 @@ object Data extends Controller {
       (JsPath \ "keyslots").read[Seq[String]]
     )(StoreRequest)
 
-  implicit val storeResponseWrites: Writes[StoreResponse] = new Writes[StoreResponse] {
-      def writes(storeResponse: StoreResponse) = Json.obj(
-        "data_id" -> storeResponse.data_id,
-        "keyslot_ids" -> storeResponse.keyslot_ids
-      )
+  implicit val storeResponseWrites: Writes[YjpsResponse] = new Writes[YjpsResponse] {
+      def writes(yjpsResponse: YjpsResponse) = yjpsResponse match {
+        case StoreResponse(data_id, keyslot_ids) =>
+          Json.obj(
+            "data_id" -> data_id,
+            "keyslot_ids" -> keyslot_ids
+          )
+        case ErrorResponse(errmsg) =>
+          Json.obj(
+            "error_message" -> errmsg
+          )
+      }
     }
 
   def store: Action[JsValue] = Action(parse.json) { request =>
     request.body
       .asOpt
-      .map(dataAccess.insertObject)
-      .map{storeResponseFut =>
-        storeResponseFut
-          .map(storeResponse =>
-            Ok(storeResponse)
+      .map(dataAccess.storeObject)
+      .map{yjpsResponseFut =>
+        yjpsResponseFut
+          .map(yjpsResponse =>
+            Ok(yjpsResponse)
           )
       }
       .getOrElse(

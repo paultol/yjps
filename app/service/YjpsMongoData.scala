@@ -21,7 +21,7 @@ case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
 
   implicit val writeMongoStorable = BSONDocumentWriter[MongoStorable]
 
-  override def insertObject(toInsert: StoreRequest): Future[YjpsResponse] =  {
+  override def storeObject(toInsert: StoreRequest): Future[YjpsResponse] =  {
     val storable = MongoStorable(toInsert)
     collection.flatMap(_.insert(storable)).map { res =>
       if (res.ok) StoreResponse(storable.data_id, storable.keyslots.map(_.id))

@@ -10,5 +10,5 @@ import scala.concurrent.Future
 
 trait YjpsDataService {
 
-  def insertObject(toInsert: StoreRequest): Future[StoreResponse]
+  def storeObject(toInsert: StoreRequest): Future[StoreResponse]
 }
