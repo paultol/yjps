@@ -11,3 +11,4 @@ routesGenerator := InjectedRoutesGenerator
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.11.14"
 )
+
