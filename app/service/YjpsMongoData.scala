@@ -5,6 +5,7 @@ import reactivemongo.api.MongoDriver
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.WriteResult
 import reactivemongo.bson.{BSONDocumentWriter, BSONObjectID}
+import storage.MongoStorage
 import yjps.models.{ErrorResponse, StoreRequest, StoreResponse, YjpsResponse}
 import yjps.services.YjpsDataService
 
@@ -13,13 +14,10 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * Created by iv on 12/1/16.
   */
-case class YjpsMongo(configPath: Option[String]) extends YjpsDataService {
+case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
   import ExecutionContext.Implicits.global
 
-  lazy val config = ConfigFactory.load()
-  val driver = MongoDriver(config)
-  val connections = driver.connection(List("localhost"))
-  def collection: Future[BSONCollection]  = connections.database("database").map(_.collection("data_objects"))
+  def collection: Future[BSONCollection]  = mongodb.connections.database("database").map(_.collection("data_objects"))
 
   implicit val writeMongoStorable = BSONDocumentWriter[MongoStorable]
 
