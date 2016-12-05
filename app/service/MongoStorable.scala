@@ -4,7 +4,7 @@ import java.util.Base64
 import java.security.MessageDigest
 
 import play.api.libs.json.JsObject
-import reactivemongo.bson.{BSONDocumentWriter, BSONObjectID}
+import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONObjectID, BSONString, BSONValue}
 import service.MongoStorable.Keyslot
 import yjps.models.StoreRequest
 
@@ -17,7 +17,15 @@ object MongoStorable {
 
   case class Keyslot(id: String, keyslot: String)
 
-  implicit val writeKeyslot = BSONDocumentWriter[Keyslot]
+  implicit val writeKeyslotSeq: BSONDocumentWriter[Seq[Keyslot]] = BSONDocumentWriter[Seq[Keyslot]] {
+    keyslotSeq: Seq[Keyslot] =>
+      BSONDocument(
+        keyslotSeq.map {
+          keyslot =>
+            keyslot.id -> BSONString(keyslot.keyslot)
+        }
+      )
+  }
 
   private def generateB64Id = Base64.getEncoder.encodeToString(
     MessageDigest.getInstance("SHA-512").digest(
@@ -25,7 +33,7 @@ object MongoStorable {
     )
   )
 
-  def apply(request: StoreRequest) = {
+  def apply(request: StoreRequest): MongoStorable = {
     MongoStorable(
       generateB64Id,
       request.data,

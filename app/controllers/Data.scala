@@ -1,7 +1,5 @@
 package controllers
 
-import play.api.data.Form
-import play.api.libs.functional.FunctionalBuilder
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.mvc.{Action, Controller, Result}
@@ -14,7 +12,9 @@ import scala.concurrent.Future
 /**
   * Created by iv on 11/30/16.
   */
-object Data extends Controller {
+class Data extends Controller {
+
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   val dataAccess = YjpsMongoData(MongoStorage)
 
@@ -23,7 +23,7 @@ object Data extends Controller {
       (JsPath \ "keyslots").read[Seq[String]]
     )(StoreRequest)
 
-  implicit val storeResponseWrites: Writes[YjpsResponse] = new Writes[YjpsResponse] {
+  implicit val yjpsResponseWrites: Writes[YjpsResponse] = new Writes[YjpsResponse] {
       def writes(yjpsResponse: YjpsResponse) = yjpsResponse match {
         case StoreResponse(data_id, keyslot_ids) =>
           Json.obj(
@@ -44,7 +44,7 @@ object Data extends Controller {
       .map{yjpsResponseFut =>
         yjpsResponseFut
           .map(yjpsResponse =>
-            Ok(yjpsResponse)
+            Ok(Json.toJson(yjpsResponse))
           )
       }.getOrElse(
         Future[Result](BadRequest)

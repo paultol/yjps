@@ -2,6 +2,7 @@
 #GET   /transaction/commit/:id     controllers.Transaction.commit(id: Long)
 #GET   /transaction/rollback/:id   controllers.Transaction.rollback(id: Long)
 
-POST  /data/store                 controllers.Data.store()
 #POST  /data/retrieve              controllers.DataObject.retrieve()
 #POST  /data/delete                controllers.DataObject.delete()
+
+POST  /data/store                 controllers.Data.store()

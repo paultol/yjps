@@ -1,10 +1,8 @@
 package service
 
-import com.typesafe.config.ConfigFactory
-import reactivemongo.api.MongoDriver
 import reactivemongo.api.collections.bson.BSONCollection
-import reactivemongo.api.commands.WriteResult
-import reactivemongo.bson.{BSONDocumentWriter, BSONObjectID}
+import reactivemongo.play.json._
+import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONObjectID, BSONString}
 import storage.MongoStorage
 import yjps.models.{ErrorResponse, StoreRequest, StoreResponse, YjpsResponse}
 import yjps.services.YjpsDataService
@@ -16,10 +14,20 @@ import scala.concurrent.{ExecutionContext, Future}
   */
 case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
   import ExecutionContext.Implicits.global
+  import MongoStorable._
 
   def collection: Future[BSONCollection]  = mongodb.connections.database("database").map(_.collection("data_objects"))
 
-  implicit val writeMongoStorable = BSONDocumentWriter[MongoStorable]
+  implicit val writeMongoStorable: BSONDocumentWriter[MongoStorable] = BSONDocumentWriter[MongoStorable] {
+    mongoStorable: MongoStorable =>
+      BSONDocument(
+        Seq(
+          "data_id" -> BSONString(mongoStorable.data_id),
+          "data" -> JsObjectWriter.write(mongoStorable.data),
+          "keyslots" -> writeKeyslotSeq.write(mongoStorable.keyslots)
+        )
+      )
+  }
 
   override def storeObject(toInsert: StoreRequest): Future[YjpsResponse] =  {
     val storable = MongoStorable(toInsert)

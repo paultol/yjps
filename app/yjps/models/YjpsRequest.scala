@@ -1,6 +1,6 @@
 package yjps.models
 
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.{JsObject}
 
 
 /**
