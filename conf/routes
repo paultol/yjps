@@ -1,8 +1,13 @@
-#GET   /transaction/start          controllers.Transaction.start()
-#GET   /transaction/commit/:id     controllers.Transaction.commit(id: Long)
-#GET   /transaction/rollback/:id   controllers.Transaction.rollback(id: Long)
+OPTIONS /data/store                 controllers.Data.options()
+OPTIONS /data/test                  controllers.Data.options()
 
-#POST  /data/retrieve              controllers.DataObject.retrieve()
-#POST  /data/delete                controllers.DataObject.delete()
+#GET    /transaction/start          controllers.Transaction.start()
+#GET    /transaction/commit/:id     controllers.Transaction.commit(id: Long)
+#GET    /transaction/rollback/:id   controllers.Transaction.rollback(id: Long)
 
-POST  /data/store                 controllers.Data.store()
+#POST   /data/retrieve              controllers.DataObject.retrieve()
+#POST   /data/delete                controllers.DataObject.delete()
+
+
+POST    /data/store                 controllers.Data.store()
+POST    /data/test                  controllers.Data.test()

@@ -2,7 +2,7 @@ package controllers
 
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import play.api.mvc.{Action, Controller, Result}
+import play.api.mvc._
 import service.YjpsMongoData
 import storage.MongoStorage
 import yjps.models._
@@ -37,17 +37,46 @@ class Data extends Controller {
       }
     }
 
-  def store: Action[JsValue] = Action.async(parse.json) { request =>
-    request.body
-      .asOpt
-      .map(dataAccess.storeObject)
-      .map{yjpsResponseFut =>
-        yjpsResponseFut
-          .map(yjpsResponse =>
-            Ok(Json.toJson(yjpsResponse))
-          )
-      }.getOrElse(
-        Future[Result](BadRequest)
-      )
+  /** testing comes here **/
+
+  case class StringObject(string: String)
+
+  implicit val stringObjectReads: Reads[StringObject] =
+    (JsPath \ "string").read[String].map(StringObject)
+
+  implicit val stringObjectWrites: Writes[StringObject] = new Writes[StringObject] {
+    def writes(stringObject: StringObject) = Json.obj(
+      "string" -> stringObject.string
+    )
+  }
+
+  def test = Action(parse.json(stringObjectReads)) { request =>
+    println(request.body)
+    Ok(Json.toJson(request.body)).withHeaders(
+      ("Access-Control-Allow-Origin", "*"),
+      ("Access-Control-Allow-Method", "GET, POST"),
+      ("Access-Control-Allow-Headers", "Content-Type"))
+  }
+
+  /** testing ends here **/
+
+  def store = Action.async(parse.json(storeRequestReads)) { request =>
+    val parsedbody: StoreRequest = request.body
+    println(parsedbody)
+    dataAccess.storeObject(parsedbody)
+      .map(yjpsResponse =>
+        Ok(Json.toJson(yjpsResponse)).withHeaders(
+          ("Access-Control-Allow-Origin", "*"),
+          ("Access-Control-Allow-Method", "GET, POST"),
+          ("Access-Control-Allow-Headers", "Content-Type"))
+        )
+  }
+
+  def options = Action {
+    Ok("yoyoyoyo here are your options")
+        .withHeaders(
+          ("Access-Control-Allow-Origin", "*"),
+          ("Access-Control-Allow-Method", "GET, POST"),
+          ("Access-Control-Allow-Headers", "Content-Type"))
   }
 }
