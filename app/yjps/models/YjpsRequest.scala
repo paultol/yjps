@@ -1,6 +1,6 @@
 package yjps.models
 
-import play.api.libs.json.{JsObject}
+import play.api.libs.json.{JsObject, JsValue}
 
 
 /**
@@ -8,4 +8,4 @@ import play.api.libs.json.{JsObject}
   */
 trait YjpsRequest
 
-case class StoreRequest(data: JsObject, keyslots: Seq[String]) extends YjpsRequest
+case class StoreRequest(data: JsValue, keyslots: Seq[String]) extends YjpsRequest

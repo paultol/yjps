@@ -3,7 +3,7 @@ package service
 import java.util.Base64
 import java.security.MessageDigest
 
-import play.api.libs.json.JsObject
+import play.api.libs.json.{JsObject, JsValue}
 import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONObjectID, BSONString, BSONValue}
 import service.MongoStorable.Keyslot
 import yjps.models.StoreRequest
@@ -11,7 +11,7 @@ import yjps.models.StoreRequest
 /**
   * Created by iv on 12/4/16.
   */
-case class MongoStorable(data_id: String, data: JsObject, keyslots: Seq[Keyslot])
+case class MongoStorable(data_id: String, data: JsValue, keyslots: Seq[Keyslot])
 
 object MongoStorable {
 

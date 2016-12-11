@@ -19,7 +19,7 @@ class Data extends Controller {
   val dataAccess = YjpsMongoData(MongoStorage)
 
   implicit val storeRequestReads: Reads[StoreRequest] = (
-    (JsPath \ "data").read[JsObject] and
+    (JsPath \ "data").read[JsValue] and
       (JsPath \ "keyslots").read[Seq[String]]
     )(StoreRequest)
 
@@ -53,9 +53,9 @@ class Data extends Controller {
   def test = Action(parse.json(stringObjectReads)) { request =>
     println(request.body)
     Ok(Json.toJson(request.body)).withHeaders(
-      ("Access-Control-Allow-Origin", "*"),
-      ("Access-Control-Allow-Method", "GET, POST"),
-      ("Access-Control-Allow-Headers", "Content-Type"))
+      ACCESS_CONTROL_ALLOW_ORIGIN -> "*",
+      ACCESS_CONTROL_ALLOW_METHODS -> "GET, POST",
+      ACCESS_CONTROL_ALLOW_HEADERS -> "Content-Type")
   }
 
   /** testing ends here **/
@@ -66,17 +66,17 @@ class Data extends Controller {
     dataAccess.storeObject(parsedbody)
       .map(yjpsResponse =>
         Ok(Json.toJson(yjpsResponse)).withHeaders(
-          ("Access-Control-Allow-Origin", "*"),
-          ("Access-Control-Allow-Method", "GET, POST"),
-          ("Access-Control-Allow-Headers", "Content-Type"))
+          ACCESS_CONTROL_ALLOW_ORIGIN -> "*",
+          ACCESS_CONTROL_ALLOW_METHODS -> "GET, POST",
+          ACCESS_CONTROL_ALLOW_HEADERS -> "Content-Type")
         )
   }
 
   def options = Action {
     Ok("yoyoyoyo here are your options")
         .withHeaders(
-          ("Access-Control-Allow-Origin", "*"),
-          ("Access-Control-Allow-Method", "GET, POST"),
-          ("Access-Control-Allow-Headers", "Content-Type"))
+          ACCESS_CONTROL_ALLOW_ORIGIN -> "*",
+          ACCESS_CONTROL_ALLOW_METHODS -> "GET, POST",
+          ACCESS_CONTROL_ALLOW_HEADERS -> "Content-Type")
   }
 }

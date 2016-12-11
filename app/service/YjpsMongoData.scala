@@ -1,8 +1,9 @@
 package service
 
+import play.api.libs.json.{JsObject, JsValue}
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.play.json._
-import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONObjectID, BSONString}
+import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONString}
 import storage.MongoStorage
 import yjps.models.{ErrorResponse, StoreRequest, StoreResponse, YjpsResponse}
 import yjps.services.YjpsDataService
@@ -23,7 +24,7 @@ case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
       BSONDocument(
         Seq(
           "data_id" -> BSONString(mongoStorable.data_id),
-          "data" -> JsObjectWriter.write(mongoStorable.data),
+          "data" -> JsObjectWriter.write(mongoStorable.data.as[JsObject]),
           "keyslots" -> writeKeyslotSeq.write(mongoStorable.keyslots)
         )
       )
