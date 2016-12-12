@@ -30,6 +30,11 @@ class Data extends Controller {
             "data_id" -> data_id,
             "keyslot_ids" -> keyslot_ids
           )
+        case RetrieveResponse(data, keyslot) =>
+          Json.obj(
+            "data" -> data,
+            "keyslot" -> keyslot
+          )
         case ErrorResponse(errmsg) =>
           Json.obj(
             "error_message" -> errmsg
@@ -64,6 +69,22 @@ class Data extends Controller {
     val parsedbody: StoreRequest = request.body
     println(parsedbody)
     dataAccess.storeObject(parsedbody)
+      .map(yjpsResponse =>
+        Ok(Json.toJson(yjpsResponse)).withHeaders(
+          ACCESS_CONTROL_ALLOW_ORIGIN -> "*",
+          ACCESS_CONTROL_ALLOW_METHODS -> "GET, POST",
+          ACCESS_CONTROL_ALLOW_HEADERS -> "Content-Type")
+        )
+  }
+
+  implicit val retrieveRequestReads: Reads[RetrieveRequest] = (
+    (JsPath \ "data_id").read[String] and
+      (JsPath \ "keyslot_id").read[String]
+    )(RetrieveRequest)
+
+  def retrieve = Action.async(parse.json(retrieveRequestReads))   { request =>
+    val parsedBody: RetrieveRequest = request.body
+    dataAccess.retrieveObject(parsedBody)
       .map(yjpsResponse =>
         Ok(Json.toJson(yjpsResponse)).withHeaders(
           ACCESS_CONTROL_ALLOW_ORIGIN -> "*",

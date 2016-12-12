@@ -9,3 +9,5 @@ import play.api.libs.json.{JsObject, JsValue}
 trait YjpsRequest
 
 case class StoreRequest(data: JsValue, keyslots: Seq[String]) extends YjpsRequest
+
+case class RetrieveRequest(data_id: String, keyslot_id: String) extends YjpsRequest

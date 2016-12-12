@@ -1,6 +1,6 @@
 package yjps.services
 
-import yjps.models.{StoreRequest, YjpsResponse}
+import yjps.models.{RetrieveRequest, StoreRequest, YjpsResponse}
 
 import scala.concurrent.Future
 
@@ -11,4 +11,5 @@ import scala.concurrent.Future
 trait YjpsDataService {
 
   def storeObject(toInsert: StoreRequest): Future[YjpsResponse]
+  def retrieveObject(toRetrieve: RetrieveRequest): Future[YjpsResponse]
 }
