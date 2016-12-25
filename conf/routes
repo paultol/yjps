@@ -1,6 +1,12 @@
-OPTIONS /data/store                 controllers.Data.options()
-OPTIONS /data/retrieve              controllers.Data.options()
-OPTIONS /data/test                  controllers.Data.options()
+OPTIONS /storecrypt            controllers.CryptStorage.options()
+OPTIONS /getcrypt              controllers.CryptStorage.options()
+OPTIONS /test                  controllers.CryptStorage.options()
+
+
+POST    /storecrypt            controllers.CryptStorage.storeCrypt()
+POST    /test                  controllers.CryptStorage.test()
+POST    /getcrypt              controllers.CryptStorage.getCrypt()
+
 
 #GET    /transaction/start          controllers.Transaction.start()
 #GET    /transaction/commit/:id     controllers.Transaction.commit(id: Long)
@@ -9,7 +15,3 @@ OPTIONS /data/test                  controllers.Data.options()
 #POST   /data/retrieve              controllers.DataObject.retrieve()
 #POST   /data/delete                controllers.DataObject.delete()
 
-
-POST    /data/store                 controllers.Data.store()
-POST    /data/test                  controllers.Data.test()
-POST    /data/retrieve              controllers.Data.retrieve()

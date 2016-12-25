@@ -1,4 +1,4 @@
-package service
+package services
 
 import play.api.libs.json.JsObject
 import reactivemongo.api.collections.bson.BSONCollection

@@ -1,4 +1,4 @@
-package service
+package services
 
 import storage.MongoStorage
 import yjps.services.YjpsTransactionService
