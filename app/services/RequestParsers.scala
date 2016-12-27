@@ -1,19 +1,29 @@
 package services
 
-import play.api.libs.json.{JsPath, JsValue, Reads}
+import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import yjps.models.{RetrieveRequest, StoreRequest}
+import yjps.models.{GetCrypt2Request, GetCryptRequest, StoreCryptRequest}
 
 object RequestParsers {
 
-  implicit val storeRequestReads: Reads[StoreRequest] = (
+  implicit val storeCryptRequestReads: Reads[StoreCryptRequest] = (
     (JsPath \ "data").read[JsValue] and
       (JsPath \ "keyslots").read[Seq[String]]
-    )(StoreRequest)
+    )(StoreCryptRequest)
 
-  implicit val retrieveRequestReads: Reads[RetrieveRequest] = (
+  implicit val getCryptRequestReads: Reads[GetCryptRequest] = (
     (JsPath \ "data_id").read[String] and
       (JsPath \ "keyslot_id").read[String]
-    )(RetrieveRequest)
+    )(GetCryptRequest)
+
+  implicit val getCrypt2RequestReads: Reads[GetCrypt2Request] = new Reads[GetCrypt2Request] {
+
+    override def reads(json: JsValue): JsResult[GetCrypt2Request] =
+      (JsPath \ "data_id")
+        .read[String]
+        .reads(json)
+        .map(GetCrypt2Request)
+  }
+
 
 }

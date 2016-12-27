@@ -29,10 +29,10 @@ case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
       )
   }
 
-  override def storeObject(toInsert: StoreRequest): Future[YjpsResponse] = {
+  override def storeObject(toInsert: StoreCryptRequest): Future[YjpsResponse] = {
     val storable = MongoStorable(toInsert)
     collection.flatMap(_.insert(storable)).map { res =>
-      if (res.ok) StoreResponse(storable.data_id, storable.keyslots.map(_._1))
+      if (res.ok) StoreCryptResponse(storable.data_id, storable.keyslots.map(_._1))
       else ErrorResponse("Failed to store data")
     }
   }
@@ -59,7 +59,7 @@ case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
       )
   }
 
-  override def retrieveObject(toRetrieve: RetrieveRequest): Future[YjpsResponse] = {
+  override def getObject(toRetrieve: GetCryptRequest): Future[YjpsResponse] = {
     val query = BSONDocument("data_id" -> toRetrieve.data_id)
 
     for {
@@ -69,8 +69,27 @@ case class YjpsMongoData(mongodb: MongoStorage) extends YjpsDataService {
       resultOpt.flatMap { storable =>
         storable.keyslots.toMap.get(toRetrieve.keyslot_id)
           .map { keyslot =>
-            RetrieveResponse(storable.data, keyslot)
+            GetCryptResponse(storable.data, keyslot)
           }
+      }.getOrElse(ErrorResponse("Failed to retrieve data"))
+    }
+
+  }
+
+  override def getObject2(toRetrieve: GetCrypt2Request): Future[YjpsResponse] = {
+    val query = BSONDocument("data_id" -> toRetrieve.data_id)
+
+    for {
+      col <- collection
+      resultOpt <- col.find(query).one[MongoStorable]
+    } yield {
+      resultOpt.flatMap { storable =>
+        if (storable.keyslots.length != 1) {
+          None
+        }
+        else {
+          Some(GetCryptResponse(storable.data, storable.keyslots.head._2))
+        }
       }.getOrElse(ErrorResponse("Failed to retrieve data"))
     }
 

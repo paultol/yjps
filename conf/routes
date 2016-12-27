@@ -6,6 +6,7 @@ OPTIONS /test                  controllers.CryptStorage.options()
 POST    /storecrypt            controllers.CryptStorage.storeCrypt()
 POST    /test                  controllers.CryptStorage.test()
 POST    /getcrypt              controllers.CryptStorage.getCrypt()
+POST    /getcrypt2             controllers.CryptStorage.getCrypt2()
 
 
 #GET    /transaction/start          controllers.Transaction.start()

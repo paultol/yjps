@@ -5,7 +5,7 @@ import java.util.Base64
 
 import play.api.libs.json.JsValue
 import reactivemongo.bson.BSONObjectID
-import yjps.models.StoreRequest
+import yjps.models.StoreCryptRequest
 
 /**
   * Created by iv on 12/4/16.
@@ -20,7 +20,7 @@ object MongoStorable {
     )
   )
 
-  def apply(request: StoreRequest): MongoStorable = {
+  def apply(request: StoreCryptRequest): MongoStorable = {
     MongoStorable(
       generateB64Id,
       request.data,

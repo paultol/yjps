@@ -8,6 +8,8 @@ import play.api.libs.json.{JsObject, JsValue}
   */
 trait YjpsRequest
 
-case class StoreRequest(data: JsValue, keyslots: Seq[String]) extends YjpsRequest
+case class StoreCryptRequest(data: JsValue, keyslots: Seq[String]) extends YjpsRequest
 
-case class RetrieveRequest(data_id: String, keyslot_id: String) extends YjpsRequest
+case class GetCryptRequest(data_id: String, keyslot_id: String) extends YjpsRequest
+
+case class GetCrypt2Request(data_id: String) extends YjpsRequest

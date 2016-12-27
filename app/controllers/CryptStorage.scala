@@ -15,8 +15,8 @@ class CryptStorage extends Controller {
 
   val dataAccess = YjpsMongoData(MongoStorage)
 
-  def storeCrypt = Action.async(parse.json(storeRequestReads)) { request =>
-    val parsedbody: StoreRequest = request.body
+  def storeCrypt = Action.async(parse.json(storeCryptRequestReads)) { request =>
+    val parsedbody: StoreCryptRequest = request.body
     dataAccess.storeObject(parsedbody)
       .map(yjpsResponse =>
         corsHeaders(
@@ -25,9 +25,18 @@ class CryptStorage extends Controller {
   }
 
 
-  def getCrypt = Action.async(parse.json(retrieveRequestReads)) { request =>
-    val parsedBody: RetrieveRequest = request.body
-    dataAccess.retrieveObject(parsedBody)
+  def getCrypt = Action.async(parse.json(getCryptRequestReads)) { request =>
+    val parsedBody: GetCryptRequest = request.body
+    dataAccess.getObject(parsedBody)
+      .map(yjpsResponse =>
+        corsHeaders(
+          Ok(Json.toJson(yjpsResponse)))
+      )
+  }
+
+  def getCrypt2 = Action.async(parse.json(getCrypt2RequestReads)) { request =>
+    val parsedBody: GetCrypt2Request = request.body
+    dataAccess.getObject2(parsedBody)
       .map(yjpsResponse =>
         corsHeaders(
           Ok(Json.toJson(yjpsResponse)))
